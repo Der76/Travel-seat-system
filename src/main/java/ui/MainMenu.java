@@ -74,7 +74,12 @@ public class MainMenu {
 
         Optional<User> user = userDao.login(username, password);
         if (user.isPresent()) {
-            new UserMenu(user.get(), scanner).show();   // returns here on logout
+            User loggedIn = user.get();
+            if (loggedIn.roles().equalsIgnoreCase("ADMIN")) {
+                new AdminMenu(loggedIn, scanner, userDao).show();   // returns here on logout
+            } else {
+                new UserMenu(loggedIn, scanner).show();             // returns here on logout
+            }
         } else {
             System.out.println("Invalid username or password.");
         }
